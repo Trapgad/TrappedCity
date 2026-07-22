@@ -1,12 +1,13 @@
 import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
-import { updatePlayer } from ".player.js";
-import { createWorld } from ".world.js";
+import { updatePlayer } from "./player.js";
+import { createWorld } from "./world.js";
 
 // =================================
 // TRAP CITY 3D
 // MAIN ENGINE
 // =================================
 
+// SCENE
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x202020);
 
@@ -34,7 +35,10 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 document.body.appendChild(renderer.domElement);
 
-// LIGHTS
+// =================================
+// LIGHTING
+// =================================
+
 const light = new THREE.DirectionalLight(
     0xffffff,
     2
@@ -51,46 +55,52 @@ const ambient = new THREE.AmbientLight(
 
 scene.add(ambient);
 
-// GROUND
-const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(200, 200),
-    new THREE.MeshStandardMaterial({
-        color: 0x444444
-    })
-);
+// =================================
+// WORLD
+// =================================
 
-ground.rotation.x = -Math.PI / 2;
+createWorld(scene);
 
-scene.add(ground);
-
+// =================================
 // PLAYER
+// =================================
+
 const player = new THREE.Mesh(
+
     new THREE.BoxGeometry(1, 2, 1),
+
     new THREE.MeshStandardMaterial({
         color: 0xff0055
     })
+
 );
 
 player.position.set(0, 1, 0);
 
 scene.add(player);
 
+// =================================
 // REMOVE LOADING SCREEN
+// =================================
+
 const loading = document.getElementById("loading");
 
 if (loading) {
     loading.remove();
 }
 
+// =================================
 // GAME LOOP
+// =================================
+
 function animate() {
 
     requestAnimationFrame(animate);
 
-    // Update player movement
+    // PLAYER MOVEMENT
     updatePlayer(player);
 
-    // Third-person camera
+    // THIRD PERSON CAMERA
     camera.position.x = player.position.x;
     camera.position.y = player.position.y + 8;
     camera.position.z = player.position.z + 10;
@@ -98,11 +108,15 @@ function animate() {
     camera.lookAt(player.position);
 
     renderer.render(scene, camera);
+
 }
 
 animate();
 
+// =================================
 // WINDOW RESIZE
+// =================================
+
 window.addEventListener("resize", () => {
 
     camera.aspect =
@@ -112,7 +126,6 @@ window.addEventListener("resize", () => {
 
     renderer.setSize(
         window.innerWidth,
-        window.innerHeight
-    );
+        window.innerHeight);
 
 });
