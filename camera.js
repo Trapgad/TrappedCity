@@ -15,7 +15,6 @@ const distance = 10;
 const height = 7;
 
 
-// Target camera position
 
 const targetX =
 player.position.x;
@@ -30,7 +29,7 @@ player.position.z + distance;
 
 
 
-// Smooth movement
+// Smooth follow
 
 camera.position.x +=
 (targetX - camera.position.x) * 0.08;
@@ -45,10 +44,8 @@ camera.position.z +=
 
 
 
-// Look at player
-
 camera.lookAt(
-player.position
+    player.position
 );
 
 
