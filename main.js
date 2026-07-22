@@ -1,5 +1,6 @@
 import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
 import { updatePlayer } from ".player.js";
+import { createWorld } from ".world.js";
 
 // =================================
 // TRAP CITY 3D
