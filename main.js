@@ -1,97 +1,117 @@
 import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
+import { updatePlayer } from ".player.js";
+
+// =================================
+// TRAP CITY 3D
+// MAIN ENGINE
+// =================================
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x202020);
 
+// CAMERA
 const camera = new THREE.PerspectiveCamera(
-75,
-window.innerWidth/window.innerHeight,
-0.1,
-1000
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
 );
 
-camera.position.set(0,8,12);
+camera.position.set(0, 8, 12);
 
+// RENDERER
 const renderer = new THREE.WebGLRenderer({
-    antialias:true
+    antialias: true
 });
 
 renderer.setSize(
-window.innerWidth,
-window.innerHeight
+    window.innerWidth,
+    window.innerHeight
 );
+
+renderer.setPixelRatio(window.devicePixelRatio);
 
 document.body.appendChild(renderer.domElement);
 
-// LIGHT
-
+// LIGHTS
 const light = new THREE.DirectionalLight(
-0xffffff,
-2
+    0xffffff,
+    2
 );
 
-light.position.set(10,20,10);
+light.position.set(10, 20, 10);
 
 scene.add(light);
 
-scene.add(new THREE.AmbientLight(0xffffff,0.5));
-
-// GROUND
-
-const ground = new THREE.Mesh(
-
-new THREE.PlaneGeometry(200,200),
-
-new THREE.MeshStandardMaterial({
-color:0x444444
-})
-
+const ambient = new THREE.AmbientLight(
+    0xffffff,
+    0.5
 );
 
-ground.rotation.x = -Math.PI/2;
+scene.add(ambient);
+
+// GROUND
+const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(200, 200),
+    new THREE.MeshStandardMaterial({
+        color: 0x444444
+    })
+);
+
+ground.rotation.x = -Math.PI / 2;
 
 scene.add(ground);
 
 // PLAYER
-
 const player = new THREE.Mesh(
-
-new THREE.BoxGeometry(1,2,1),
-
-new THREE.MeshStandardMaterial({
-color:0xff0055
-})
-
+    new THREE.BoxGeometry(1, 2, 1),
+    new THREE.MeshStandardMaterial({
+        color: 0xff0055
+    })
 );
 
-player.position.y = 1;
+player.position.set(0, 1, 0);
 
 scene.add(player);
 
-// Remove loading screen
+// REMOVE LOADING SCREEN
+const loading = document.getElementById("loading");
 
-document.getElementById("loading").remove();
+if (loading) {
+    loading.remove();
+}
 
-function animate(){
+// GAME LOOP
+function animate() {
 
-requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-renderer.render(scene,camera);
+    // Update player movement
+    updatePlayer(player);
 
+    // Third-person camera
+    camera.position.x = player.position.x;
+    camera.position.y = player.position.y + 8;
+    camera.position.z = player.position.z + 10;
+
+    camera.lookAt(player.position);
+
+    renderer.render(scene, camera);
 }
 
 animate();
 
-window.addEventListener("resize",()=>{
+// WINDOW RESIZE
+window.addEventListener("resize", () => {
 
-camera.aspect=
-window.innerWidth/window.innerHeight;
+    camera.aspect =
+        window.innerWidth / window.innerHeight;
 
-camera.updateProjectionMatrix();
+    camera.updateProjectionMatrix();
 
-renderer.setSize(
-window.innerWidth,
-window.innerHeight
-);
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+    );
 
 });
