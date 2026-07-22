@@ -1,19 +1,15 @@
-// =================================
-// TRAP CITY 3D
-// PLAYER + COLLISION SYSTEM
-// =================================
-
+import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
 
 import { buildings } from "./world.js";
 
 
+// =================================
+// TRAP CITY 3D
+// PLAYER SYSTEM + COLLISION
+// =================================
+
+
 export const keys = {};
-
-
-let velocity = {
-    x:0,
-    z:0
-};
 
 
 
@@ -24,6 +20,7 @@ window.addEventListener(
 keys[e.key.toLowerCase()] = true;
 
 });
+
 
 
 window.addEventListener(
@@ -55,6 +52,8 @@ let direction = {
 
 
 
+// CONTROLS
+
 if(keys["w"])
 direction.z -= 1;
 
@@ -72,12 +71,14 @@ direction.x += 1;
 
 
 
+
+// NORMALIZE MOVEMENT
+
 const length =
 Math.sqrt(
-direction.x ** 2 +
-direction.z ** 2
+    direction.x ** 2 +
+    direction.z ** 2
 );
-
 
 
 if(length > 0){
@@ -90,44 +91,40 @@ direction.z /= length;
 
 
 
-// Calculate movement
+// STORE OLD POSITION
 
-let moveX =
+const oldPosition = {
+    x: player.position.x,
+    z: player.position.z
+};
+
+
+
+
+// MOVE PLAYER
+
+player.position.x +=
 direction.x * speed * delta;
 
 
-let moveZ =
+player.position.z +=
 direction.z * speed * delta;
 
 
 
 
-// Save old position
 
-let oldX =
-player.position.x;
-
-
-let oldZ =
-player.position.z;
-
-
-
-// Move player
-
-player.position.x += moveX;
-
-player.position.z += moveZ;
-
-
-
-// Collision check
+// PLAYER COLLISION BOX
 
 const playerBox =
 new THREE.Box3()
 .setFromObject(player);
 
 
+
+
+
+// CHECK BUILDINGS
 
 for(
 let building of buildings
@@ -147,17 +144,18 @@ buildingBox
 ){
 
 
-    // Cancel movement
+    // BLOCK MOVEMENT
 
     player.position.x =
-    oldX;
+    oldPosition.x;
 
 
     player.position.z =
-    oldZ;
+    oldPosition.z;
 
 
 }
+
 
 
 }
