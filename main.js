@@ -93,8 +93,42 @@ if (loading) {
 // GAME LOOP
 // =================================
 
-function animate() {
 
+let clock = new THREE.Clock();
+
+
+function animate(){
+
+    requestAnimationFrame(animate);
+
+
+    let delta = clock.getDelta();
+
+
+    updatePlayer(player, delta);
+
+
+    camera.position.x =
+    player.position.x;
+
+
+    camera.position.y =
+    player.position.y + 8;
+
+
+    camera.position.z =
+    player.position.z + 10;
+
+
+    camera.lookAt(player.position);
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
     requestAnimationFrame(animate);
 
     // PLAYER MOVEMENT
