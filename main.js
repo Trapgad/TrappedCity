@@ -1,6 +1,9 @@
 import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
+
 import { updatePlayer } from "./player.js";
 import { createWorld } from "./world.js";
+import { updateCamera } from "./camera.js";
+
 
 // =================================
 // TRAP CITY 3D
@@ -19,14 +22,20 @@ new THREE.Color(0x202020);
 
 // CAMERA
 
-const camera = new THREE.PerspectiveCamera(
+const camera =
+new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
 );
 
-camera.position.set(0,8,12);
+
+camera.position.set(
+    0,
+    8,
+    12
+);
 
 
 
@@ -63,11 +72,13 @@ new THREE.DirectionalLight(
     2
 );
 
+
 light.position.set(
     10,
     20,
     10
 );
+
 
 scene.add(light);
 
@@ -117,14 +128,16 @@ scene.add(player);
 
 
 
-// REMOVE LOADING
+// REMOVE LOADING SCREEN
 
 const loading =
 document.getElementById("loading");
 
 
 if(loading){
+
     loading.remove();
+
 }
 
 
@@ -138,9 +151,11 @@ new THREE.Clock();
 
 function animate(){
 
+
     requestAnimationFrame(
         animate
     );
+
 
 
     const delta =
@@ -148,7 +163,7 @@ function animate(){
 
 
 
-    // PLAYER
+    // PLAYER MOVEMENT
 
     updatePlayer(
         player,
@@ -157,23 +172,11 @@ function animate(){
 
 
 
-    // CAMERA FOLLOW
+    // CAMERA SYSTEM
 
-    camera.position.x =
-    player.position.x;
-
-
-    camera.position.y =
-    player.position.y + 8;
-
-
-    camera.position.z =
-    player.position.z + 10;
-
-
-
-    camera.lookAt(
-        player.position
+    updateCamera(
+        camera,
+        player
     );
 
 
@@ -183,7 +186,9 @@ function animate(){
         camera
     );
 
+
 }
+
 
 
 animate();
@@ -202,7 +207,9 @@ window.innerWidth /
 window.innerHeight;
 
 
+
 camera.updateProjectionMatrix();
+
 
 
 renderer.setSize(
