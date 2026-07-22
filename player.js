@@ -1,11 +1,13 @@
 // =================================
 // TRAP CITY 3D
-// PLAYER MOVEMENT V1
+// PLAYER + COLLISION SYSTEM
 // =================================
 
 
-export const keys = {};
+import { buildings } from "./world.js";
 
+
+export const keys = {};
 
 
 let velocity = {
@@ -19,21 +21,16 @@ window.addEventListener(
 "keydown",
 (e)=>{
 
-keys[
-e.key.toLowerCase()
-]=true;
+keys[e.key.toLowerCase()] = true;
 
 });
-
 
 
 window.addEventListener(
 "keyup",
 (e)=>{
 
-keys[
-e.key.toLowerCase()
-]=false;
+keys[e.key.toLowerCase()] = false;
 
 });
 
@@ -58,8 +55,6 @@ let direction = {
 
 
 
-// Controls
-
 if(keys["w"])
 direction.z -= 1;
 
@@ -76,9 +71,6 @@ if(keys["d"])
 direction.x += 1;
 
 
-
-
-// Normalize movement
 
 const length =
 Math.sqrt(
@@ -98,27 +90,78 @@ direction.z /= length;
 
 
 
-// Smooth movement
+// Calculate movement
 
-velocity.x +=
-(direction.x * speed - velocity.x)
-* 0.15;
+let moveX =
+direction.x * speed * delta;
 
 
-velocity.z +=
-(direction.z * speed - velocity.z)
-* 0.15;
+let moveZ =
+direction.z * speed * delta;
 
 
 
 
-player.position.x +=
-velocity.x * delta;
+// Save old position
+
+let oldX =
+player.position.x;
+
+
+let oldZ =
+player.position.z;
 
 
 
-player.position.z +=
-velocity.z * delta;
+// Move player
+
+player.position.x += moveX;
+
+player.position.z += moveZ;
+
+
+
+// Collision check
+
+const playerBox =
+new THREE.Box3()
+.setFromObject(player);
+
+
+
+for(
+let building of buildings
+){
+
+
+const buildingBox =
+new THREE.Box3()
+.setFromObject(building);
+
+
+
+if(
+playerBox.intersectsBox(
+buildingBox
+)
+){
+
+
+    // Cancel movement
+
+    player.position.x =
+    oldX;
+
+
+    player.position.z =
+    oldZ;
+
+
+}
+
+
+}
+
 
 
 }
