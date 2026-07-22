@@ -7,11 +7,18 @@ import { createWorld } from "./world.js";
 // MAIN ENGINE
 // =================================
 
+
 // SCENE
+
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x202020);
+
+scene.background =
+new THREE.Color(0x202020);
+
+
 
 // CAMERA
+
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -19,94 +26,138 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-camera.position.set(0, 8, 12);
+camera.position.set(0,8,12);
+
+
 
 // RENDERER
-const renderer = new THREE.WebGLRenderer({
-    antialias: true
+
+const renderer =
+new THREE.WebGLRenderer({
+    antialias:true
 });
+
 
 renderer.setSize(
     window.innerWidth,
     window.innerHeight
 );
 
-renderer.setPixelRatio(window.devicePixelRatio);
 
-document.body.appendChild(renderer.domElement);
+renderer.setPixelRatio(
+    window.devicePixelRatio
+);
 
-// =================================
+
+document.body.appendChild(
+    renderer.domElement
+);
+
+
+
 // LIGHTING
-// =================================
 
-const light = new THREE.DirectionalLight(
+const light =
+new THREE.DirectionalLight(
     0xffffff,
     2
 );
 
-light.position.set(10, 20, 10);
+light.position.set(
+    10,
+    20,
+    10
+);
 
 scene.add(light);
 
-const ambient = new THREE.AmbientLight(
+
+
+scene.add(
+new THREE.AmbientLight(
     0xffffff,
     0.5
+)
 );
 
-scene.add(ambient);
 
-// =================================
+
 // WORLD
-// =================================
 
 createWorld(scene);
 
-// =================================
+
+
 // PLAYER
-// =================================
 
-const player = new THREE.Mesh(
+const player =
+new THREE.Mesh(
 
-    new THREE.BoxGeometry(1, 2, 1),
+    new THREE.BoxGeometry(
+        1,
+        2,
+        1
+    ),
 
     new THREE.MeshStandardMaterial({
-        color: 0xff0055
+        color:0xff0055
     })
 
 );
 
-player.position.set(0, 1, 0);
+
+player.position.set(
+    0,
+    1,
+    0
+);
+
 
 scene.add(player);
 
-// =================================
-// REMOVE LOADING SCREEN
-// =================================
 
-const loading = document.getElementById("loading");
 
-if (loading) {
+// REMOVE LOADING
+
+const loading =
+document.getElementById("loading");
+
+
+if(loading){
     loading.remove();
 }
 
-// =================================
+
+
 // GAME LOOP
-// =================================
 
+const clock =
+new THREE.Clock();
 
-let clock = new THREE.Clock();
 
 
 function animate(){
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(
+        animate
+    );
 
 
-    let delta = clock.getDelta();
+    const delta =
+    clock.getDelta();
 
 
-    updatePlayer(player, delta);
 
+    // PLAYER
+
+    updatePlayer(
+        player,
+        delta
+    );
+
+
+
+    // CAMERA FOLLOW
 
     camera.position.x =
     player.position.x;
@@ -120,7 +171,11 @@ function animate(){
     player.position.z + 10;
 
 
-    camera.lookAt(player.position);
+
+    camera.lookAt(
+        player.position
+    );
+
 
 
     renderer.render(
@@ -129,37 +184,31 @@ function animate(){
     );
 
 }
-    requestAnimationFrame(animate);
 
-    // PLAYER MOVEMENT
-    updatePlayer(player);
-
-    // THIRD PERSON CAMERA
-    camera.position.x = player.position.x;
-    camera.position.y = player.position.y + 8;
-    camera.position.z = player.position.z + 10;
-
-    camera.lookAt(player.position);
-
-    renderer.render(scene, camera);
-
-}
 
 animate();
 
-// =================================
-// WINDOW RESIZE
-// =================================
 
-window.addEventListener("resize", () => {
 
-    camera.aspect =
-        window.innerWidth / window.innerHeight;
+// RESIZE
 
-    camera.updateProjectionMatrix();
+window.addEventListener(
+"resize",
+()=>{
 
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight);
+
+camera.aspect =
+window.innerWidth /
+window.innerHeight;
+
+
+camera.updateProjectionMatrix();
+
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
 
 });
